@@ -1,6 +1,7 @@
 package br.unioeste.base;
 
 import java.sql.Date;
+import java.text.DecimalFormat;
 
 public class BankAccount {
 
@@ -10,6 +11,8 @@ public class BankAccount {
 	private String bankBranch;
 	private Date startAccountDate;
 	private Date closingAccountDate;
+	private Float saldoCorrente;
+	
 	public Client getClient() {
 		return client;
 	}
@@ -41,6 +44,12 @@ public class BankAccount {
 		this.closingAccountDate = closingAccountDate;
 	}
 	
+	public void setSaldoCorrente(Float saldo){
+		this.saldoCorrente = saldo;
+	}
 	
+	public Float getSaldoCorrente(){
+		return saldoCorrente;
+	}
 	
 }

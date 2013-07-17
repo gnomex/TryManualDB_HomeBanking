@@ -10,13 +10,35 @@ public class Client{
 	private int idClient;
 
 	private String name;
+	private String lastName;
 	private String cpf;
 	private String rg;
-	//private CNPJ cnpj;
+	private String cnpj;
 	private Date bithDate;
-
-
-
+	private String email;
+	private String userName;
+	private String pwd;
+	
+	public Client(){
+		
+	}
+	
+	public Client(int idClient, String name, String lastName, String cpf,
+			String rg, String cnpj, Date bithDate, String email,
+			String userName, String pwd) {
+		super();
+		this.idClient = idClient;
+		this.name = name;
+		this.lastName = lastName;
+		this.cpf = cpf;
+		this.rg = rg;
+		this.cnpj = cnpj;
+		this.bithDate = bithDate;
+		this.email = email;
+		this.userName = userName;
+		this.pwd = pwd;
+	}
+	
 	public int getIdClient() {
 		return idClient;
 	}
@@ -49,6 +71,44 @@ public class Client{
 		this.bithDate = dataNacsimento;
 	}
 
+	public void setEmail(String email){
+		this.email = email;
+	}
+	
+	public String getEmail(){
+		return email;
+	}
 
+	public void setCNPJ(String cnpj){
+		this.cnpj = cnpj;
+	}
+	
+	public String getCNPJ(){
+		return cnpj;
+	}
+	
+	public void setLastName(String last){
+		this.lastName = last;
+	}
+	
+	public String getLastName(){
+		return lastName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPwd() {
+		return pwd;
+	}
+
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
 
 }

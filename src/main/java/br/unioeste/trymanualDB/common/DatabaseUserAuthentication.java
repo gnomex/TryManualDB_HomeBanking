@@ -41,7 +41,5 @@ public class DatabaseUserAuthentication implements Serializable {
 	public void setBd(String bd) {
 		this.bd = bd;
 	}
-
-	
 	
 }
