@@ -13,7 +13,9 @@ import javax.swing.KeyStroke;
 public class TryManualDBHomeBankingView extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private CadastroClienteView customer;
+	private CadastroClienteView customerCad;
+	private ConsultaClienteView customerCon;
+	private UpdateClienteView customerUp;
 	
 	private JMenuBar menuBar;
 	private JMenu menuCliente;
@@ -39,9 +41,11 @@ public class TryManualDBHomeBankingView extends JFrame{
 		
 		setJMenuBar(menuBar);
 		
-		customer = new CadastroClienteView(this.getSize());
+		//customer = new CadastroClienteView(this.getSize());
+		//customerCon = new ConsultaClienteView(this.getSize());
+		customerUp = new UpdateClienteView(this.getSize());
 		
-		getContentPane().add(customer, BorderLayout.CENTER);
+		getContentPane().add(customerUp, BorderLayout.CENTER);
 	}
 	
 	private void initMenu(){

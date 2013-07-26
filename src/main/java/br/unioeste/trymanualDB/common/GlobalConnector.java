@@ -14,7 +14,7 @@ public class GlobalConnector {
 		DatabaseUserAuthentication userAuth = new DatabaseUserAuthentication();
 		userAuth.setBd(SchemeModelName);
 		userAuth.setUser("root");
-		userAuth.setPasswd("root");
+		userAuth.setPasswd("sur!chm@37");
 
 		DatabaseConnection db_connection = new DatabaseConnection();
 		db_connection.connect(userAuth);

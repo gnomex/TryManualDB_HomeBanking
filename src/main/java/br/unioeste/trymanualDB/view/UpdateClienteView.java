@@ -3,6 +3,7 @@ package br.unioeste.trymanualDB.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,7 +25,7 @@ import br.unioeste.base.TipoCliente;
 import br.unioeste.trymanualDB.common.ResourceView;
 import br.unioeste.trymanualDB.controller.UCMaintainCustomerManager;
 
-public class CadastroClienteView extends JPanel{
+public class UpdateClienteView extends JPanel{
 
 	private JTextField txtNome;
 	private JTextField txtSobrenome;
@@ -35,7 +36,7 @@ public class CadastroClienteView extends JPanel{
 	private JTextField txtDataNascimento;
 	private JTextField txtUsername;
 	private JPasswordField txtUserpassword;
-	private JComboBox<String> listTipoCliente;
+	private JTextField txtTipoCliente;
 	
 	private JLabel lblNome;
 	private JLabel lblSobrenome;
@@ -50,12 +51,16 @@ public class CadastroClienteView extends JPanel{
 	
 	private JPanel pnpDados;
 	private JPanel pnpAction;
+	private JPanel pnpProcurar;
 	
-	private JButton btnSalvar, btnCancelar;
+	private JLabel lblNomeCliente;
+    private JTextField txtNomeCliente;
+    
+	private JButton btnSalvar, btnCancelar, btnProcurar;
 	
 	private UCMaintainCustomerManager customer = new UCMaintainCustomerManager();
 	
-	public CadastroClienteView(Dimension res){
+	public UpdateClienteView(Dimension res){
 		this.setSize(res);
 		initTextFields();
 		initLabels();
@@ -73,8 +78,8 @@ public class CadastroClienteView extends JPanel{
 		txtUsername = new JTextField(20);
 		txtUserpassword = new JPasswordField(20);
 		txtDataNascimento = new JTextField(10);
-		listTipoCliente = new JComboBox<String>();
-		loadTypeClient();
+		txtTipoCliente = new JTextField(20);
+		txtNomeCliente = new JTextField(30);
 	}
 	
 	private void initLabels(){
@@ -87,14 +92,15 @@ public class CadastroClienteView extends JPanel{
 		lblEmail = ResourceView.getLabel("E-mail:", txtEmail);
 		lblUsername = ResourceView.getLabel("Login:", txtUsername);
 		lblUserpwd = ResourceView.getLabel("Senha:", txtUserpassword);
-		lblTipoCliente = ResourceView.getLabel("Tipo de cliente:", listTipoCliente);
+		lblTipoCliente = ResourceView.getLabel("Tipo de cliente:", txtTipoCliente);
+		lblNomeCliente = ResourceView.getLabel("Nome do Cliente:", txtNomeCliente);
 	}
 	
 	private void initButtons(){
         btnSalvar = getButton("Salvar", KeyEvent.VK_S);
         btnSalvar.addActionListener( new SalvarDadosCliente() );
         btnCancelar = getButton("Cancelar", KeyEvent.VK_C);
-        
+        btnProcurar = getButton("Pesquisar", KeyEvent.VK_P);
     }
     
     private JButton getButton(String label,int key){
@@ -104,11 +110,17 @@ public class CadastroClienteView extends JPanel{
     }
     
 	private void initPanels(){
+		configFindPanel();
 		configDataPanel();
 		configBtnPanel();
 		
-		add(pnpDados, BorderLayout.NORTH);
+		add(pnpProcurar, BorderLayout.NORTH);
+		add(pnpDados, BorderLayout.CENTER);
 		add(pnpAction, BorderLayout.SOUTH);
+		
+		ResourceView.setComponentToPanel(pnpProcurar, lblNomeCliente);
+		ResourceView.setComponentToPanel(pnpProcurar, txtNomeCliente);
+		ResourceView.setComponentToPanel(pnpProcurar, btnProcurar);
 		
 		ResourceView.setComponentToPanel(pnpDados, lblNome);
 		ResourceView.setComponentToPanel(pnpDados, txtNome);
@@ -125,7 +137,7 @@ public class CadastroClienteView extends JPanel{
 		ResourceView.setComponentToPanel(pnpDados, lblDataNascimento);
 		ResourceView.setComponentToPanel(pnpDados, txtDataNascimento);
 		ResourceView.setComponentToPanel(pnpDados, lblTipoCliente);
-		ResourceView.setComponentToPanel(pnpDados, listTipoCliente);
+		ResourceView.setComponentToPanel(pnpDados, txtTipoCliente);
 		ResourceView.setComponentToPanel(pnpDados, lblUsername);
 		ResourceView.setComponentToPanel(pnpDados, txtUsername);
 		ResourceView.setComponentToPanel(pnpDados, lblUserpwd);
@@ -151,28 +163,11 @@ public class CadastroClienteView extends JPanel{
         pnpAction.setLayout(new GridLayout(1, 2));
     }
     
-    private void loadTypeClient() {
-    	List<String> list;
-		try {
-			list = customer.getAllTypeClients();
-			for(int i = 0; i < list.size(); i++){
-	    		System.out.println(list.get(i));
-	    		listTipoCliente.insertItemAt(list.get(i), i);
-	    	}
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
+    private void configFindPanel(){
+        pnpProcurar = new JPanel();
+        pnpProcurar.setBorder(BorderFactory.createBevelBorder(5));
+        pnpProcurar.setPreferredSize(new Dimension(getWidth() - 5, 30));
+        pnpProcurar.setLayout(new FlowLayout());
     }
     
     private void clearFields(){
@@ -241,7 +236,7 @@ public class CadastroClienteView extends JPanel{
 			else{
 				Client client = new Client();
 				TipoCliente tipo = new TipoCliente();
-				tipo.setId(listTipoCliente.getSelectedIndex() + 1);
+				//tipo.setId(listTipoCliente.getSelectedIndex() + 1);
 				client.setTipo(tipo);
 				client.setName(txtNome.getText());
 				client.setLastName(txtSobrenome.getText());
@@ -285,6 +280,5 @@ public class CadastroClienteView extends JPanel{
 				}
 			}
 		}
-    	
     }
 }

@@ -10,21 +10,24 @@ public class UCMaintainCustomerManager {
 	
 	private EntityManager entityManager = new EntityManager();
 	
-	public Client insertClient(Client customer, String which) throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception	{
-		return entityManager.getClientFactory(which).createClient(customer);
+	public Client insertClient(Client customer) throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception	{
+		return entityManager.getClientFactory().createClient(customer);
 	}
 	
-	public Client findClientById(Client customer, String which) throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception	{
+	public Client findClientById(Client customer) throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception	{
 		
-		return entityManager.getClientFactory(which).retrieveClientFromid(customer);
+		return entityManager.getClientFactory().retrieveClientFromid(customer);
 	}
-	public Client findClientByName(Client customer, String which) throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception	{
+	public Client findClientByName(Client customer) throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception	{
 		
-		return entityManager.getClientFactory(which).retrieveClientFromName(customer);
+		return entityManager.getClientFactory().retrieveClientFromName(customer);
 	}
 	
-	public List<Client> getAllClients(String which) throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception	{
-		return entityManager.getClientFactory(which).getAllClients();
+	public List<Client> getAllClients() throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception	{
+		return entityManager.getClientFactory().getAllClients();
 	}
 
+	public List<String> getAllTypeClients() throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception{
+		return entityManager.getClientFactory().retrieveAllTypeClient();
+	}
 }

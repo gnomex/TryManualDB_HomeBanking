@@ -13,13 +13,13 @@ import br.unioeste.trymanualDB.model.factory.FactoryDAOClient;
 
 public class EntityManager {
 
-	public FactoryDAOAccount getAccountFactory(String which)
+	public FactoryDAOAccount getAccountFactory()
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
 		return new COLAccontUsingSGBD();
 	}
 
-	public FactoryDAOClient getClientFactory(String which)
+	public FactoryDAOClient getClientFactory()
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {		
 		return new COLClientUsingSGBD();

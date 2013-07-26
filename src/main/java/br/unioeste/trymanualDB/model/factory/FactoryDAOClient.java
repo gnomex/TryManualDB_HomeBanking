@@ -21,4 +21,6 @@ public interface FactoryDAOClient {
 	
 	//Delete client from database
 	public  void deleteClient(Client client) throws Exception;
+	
+	public List<String> retrieveAllTypeClient() throws Exception;
 }
