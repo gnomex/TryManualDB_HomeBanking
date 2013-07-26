@@ -12,6 +12,7 @@ public class BankAccount {
 	private Date startAccountDate;
 	private Date closingAccountDate;
 	private Float saldoCorrente;
+	private TipoConta tipo;
 	
 	public Client getClient() {
 		return client;
@@ -50,6 +51,13 @@ public class BankAccount {
 	
 	public Float getSaldoCorrente(){
 		return saldoCorrente;
+	}
+	
+	public TipoConta getTipo() {
+		return tipo;
+	}
+	public void setTipo(TipoConta tipo) {
+		this.tipo = tipo;
 	}
 	
 }

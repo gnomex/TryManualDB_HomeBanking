@@ -88,6 +88,8 @@ public class COLClientUsingSGBD implements FactoryDAOClient{
 			client.setCNPJ(rs.getString(6));
 			client.setEmail(rs.getString(7));
 			client.setBirthDate(rs.getDate(8));
+			client.setUserName(rs.getString(9));
+			client.setPwd(rs.getString(10));
 		}
 
 		connection.close();
@@ -113,6 +115,8 @@ public class COLClientUsingSGBD implements FactoryDAOClient{
 			client.setCNPJ(rs.getString(6));
 			client.setEmail(rs.getString(7));
 			client.setBirthDate(rs.getDate(8));
+			client.setUserName(rs.getString(9));
+			client.setPwd(rs.getString(10));
 		}
 
 		connection.close();
@@ -141,6 +145,8 @@ public class COLClientUsingSGBD implements FactoryDAOClient{
 			client.setCNPJ(rs.getString(6));
 			client.setEmail(rs.getString(7));
 			client.setBirthDate(rs.getDate(8));
+			client.setUserName(rs.getString(9));
+			client.setPwd(rs.getString(10));
 			//Add customer to list
 			
 			clients.add(client);			

@@ -18,6 +18,7 @@ public class Client{
 	private String email;
 	private String userName;
 	private String pwd;
+	private TipoCliente tipo;
 	
 	public Client(){
 		
@@ -111,4 +112,13 @@ public class Client{
 		this.pwd = pwd;
 	}
 
+	public TipoCliente getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoCliente tipo) {
+		this.tipo = tipo;
+	}
+
+	
 }
