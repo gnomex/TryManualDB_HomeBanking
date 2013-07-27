@@ -30,14 +30,15 @@ public class ResourceView {
     	p.add(cp);
     }
     
-    private static void addComponent(JFrame frame,int layoutPos,Component board){
+    public static void addComponent(JFrame frame,String layoutPos,Component board){
         frame.add(board, layoutPos);
         frame.invalidate(); //remove layout atual com os componentes
         frame.validate(); //repõe layout com os componentes e os novos componentes
     }
     
-    private static void removeComponent(JFrame frame,Component board){
+    public static void removeComponent(JFrame frame,Component board){
         frame.remove(board);       
         frame.repaint();
     }
+    
 }

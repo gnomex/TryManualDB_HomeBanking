@@ -74,11 +74,28 @@ public class COLAccontUsingSGBD implements FactoryDAOAccount{
 
 	}
 	
+	public List<String> retrieveAllTypeAccount() throws Exception{
+		List list = null;
+		connection = GlobalConnector.getConnection();
+		
+		StringBuffer sql = new StringBuffer("SELECT nome FROM tipoconta");
+		
+		ResultSet rs = connection.executeSQL(sql);
+		
+		if(rs != null){
+			list = new ArrayList<String>();
+			while(rs.next()){
+				list.add(rs.getString(1));
+			}
+		}
+		return list;
+	}
+	
 	public BankAccount retrieveAccount(BankAccount account) throws Exception {
 		connection = GlobalConnector.getConnection();
 
 		// SELECT * FROM `Conta` WHERE 1
-		StringBuffer sql = new StringBuffer("SELECT * Conta Cliente WHERE");
+		StringBuffer sql = new StringBuffer("SELECT * conta WHERE");
 
 		sql.append("Numero=" + account.getAccountNumber() + ";");
 
@@ -179,21 +196,26 @@ public class COLAccontUsingSGBD implements FactoryDAOAccount{
 		StringBuffer build = new StringBuffer(); 
 		build.append("UPDATE Conta SET " + column + "='" + newValue + "' WHERE " + column + "='" + oldValue + "';");
 		
-		connection.execute(build);
+		connection.executeUpdate(build);;
 		
 		connection.close();
 	}
 
-	public void deleteAccount(BankAccount account) throws Exception {
+	public BankAccount deleteAccount(BankAccount account) throws Exception {
+		account = retrieveAccount(account);
+		
+		if(account == null) return null; //não encontrou a conta
+		
 		connection = GlobalConnector.getConnection();
 		
 		StringBuffer build = new StringBuffer();
-		build.append("DELETE FROM Conta WHERE Cliente_id =");
+		build.append("DELETE FROM conta WHERE Cliente_id =");
 		build.append(account.getClient() + ";");
 		
-		connection.execute(build);
+		connection.executeUpdate(build);
 		connection.close();
 		
+		return null;
 	}
 
 }

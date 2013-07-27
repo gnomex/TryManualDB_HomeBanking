@@ -20,7 +20,7 @@ public interface FactoryDAOClient {
 	public  void updateClient(String column,String newValue,String oldValue) throws Exception;
 	
 	//Delete client from database
-	public  void deleteClient(Client client) throws Exception;
+	public  Client deleteClient(Client client) throws Exception;
 	
 	public List<String> retrieveAllTypeClient() throws Exception;
 }

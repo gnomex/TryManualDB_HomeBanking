@@ -28,4 +28,8 @@ public class UCMaintainBankAccountManager {
 	public List<BankAccount> getAllAccountsByClient(Client client) throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception	{
 		return entityManager.getAccountFactory().getAllbyClient(client);
 	}
+	
+	public List<String> getAllTypeAccounts() throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception{
+		return entityManager.getAccountFactory().retrieveAllTypeAccount();
+	}
 }

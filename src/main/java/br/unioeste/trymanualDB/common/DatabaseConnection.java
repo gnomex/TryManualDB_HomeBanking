@@ -2,7 +2,9 @@ package br.unioeste.trymanualDB.common;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import static br.unioeste.trymanualDB.config.DatabaseDefinitions.DriverName;
@@ -54,6 +56,11 @@ public class DatabaseConnection {
 	public void execute(StringBuffer sql)	throws Exception{
 		Statement s = connection.createStatement();
 		s.execute(sql.toString());
+	}
+	
+	public void executeUpdate(StringBuffer sql) throws SQLException{
+		PreparedStatement s = connection.prepareStatement(sql.toString());
+		s.executeUpdate();
 	}
 	
 	public Connection getConnection() {

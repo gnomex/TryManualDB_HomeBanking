@@ -51,7 +51,7 @@ public class CadastroClienteView extends JPanel{
 	private JPanel pnpDados;
 	private JPanel pnpAction;
 	
-	private JButton btnSalvar, btnCancelar;
+	private JButton btnSalvar, btnLimpar;
 	
 	private UCMaintainCustomerManager customer = new UCMaintainCustomerManager();
 	
@@ -91,16 +91,11 @@ public class CadastroClienteView extends JPanel{
 	}
 	
 	private void initButtons(){
-        btnSalvar = getButton("Salvar", KeyEvent.VK_S);
+        btnSalvar = ResourceView.getButton("Salvar", KeyEvent.VK_S);
         btnSalvar.addActionListener( new SalvarDadosCliente() );
-        btnCancelar = getButton("Cancelar", KeyEvent.VK_C);
+        btnLimpar = ResourceView.getButton("Limpar", KeyEvent.VK_L);
+        btnLimpar.addActionListener(new LimparCampos());
         
-    }
-    
-    private JButton getButton(String label,int key){
-        JButton t = new JButton(label);
-        t.setMnemonic(key);
-        return t;
     }
     
 	private void initPanels(){
@@ -132,7 +127,7 @@ public class CadastroClienteView extends JPanel{
 		ResourceView.setComponentToPanel(pnpDados, txtUserpassword);
 		
 		ResourceView.setComponentToPanel(pnpAction, btnSalvar);
-		ResourceView.setComponentToPanel(pnpAction, btnCancelar);
+		ResourceView.setComponentToPanel(pnpAction, btnLimpar);
 		
 	}
 	
@@ -284,6 +279,14 @@ public class CadastroClienteView extends JPanel{
 					e.printStackTrace();
 				}
 			}
+		}
+    	
+    }
+    
+    private class LimparCampos implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+			clearFields();
 		}
     	
     }

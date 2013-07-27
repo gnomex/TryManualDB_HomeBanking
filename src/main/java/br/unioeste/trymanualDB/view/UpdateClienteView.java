@@ -56,7 +56,8 @@ public class UpdateClienteView extends JPanel{
 	private JLabel lblNomeCliente;
     private JTextField txtNomeCliente;
     
-	private JButton btnSalvar, btnCancelar, btnProcurar;
+	private JButton btnSalvar, btnLimpar, btnProcurar;
+	private Client oldCliente, newCliente;
 	
 	private UCMaintainCustomerManager customer = new UCMaintainCustomerManager();
 	
@@ -97,16 +98,12 @@ public class UpdateClienteView extends JPanel{
 	}
 	
 	private void initButtons(){
-        btnSalvar = getButton("Salvar", KeyEvent.VK_S);
-        btnSalvar.addActionListener( new SalvarDadosCliente() );
-        btnCancelar = getButton("Cancelar", KeyEvent.VK_C);
-        btnProcurar = getButton("Pesquisar", KeyEvent.VK_P);
-    }
-    
-    private JButton getButton(String label,int key){
-        JButton t = new JButton(label);
-        t.setMnemonic(key);
-        return t;
+        btnSalvar = ResourceView.getButton("Salvar", KeyEvent.VK_S);
+        btnSalvar.addActionListener(new SalvarDadosCliente());
+        btnLimpar = ResourceView.getButton("Limpar", KeyEvent.VK_L);
+        btnLimpar.addActionListener(new LimparCampos());
+        btnProcurar = ResourceView.getButton("Pesquisar", KeyEvent.VK_P);
+        btnProcurar.addActionListener(new ConsultaDadosCliente() );
     }
     
 	private void initPanels(){
@@ -144,7 +141,7 @@ public class UpdateClienteView extends JPanel{
 		ResourceView.setComponentToPanel(pnpDados, txtUserpassword);
 		
 		ResourceView.setComponentToPanel(pnpAction, btnSalvar);
-		ResourceView.setComponentToPanel(pnpAction, btnCancelar);
+		ResourceView.setComponentToPanel(pnpAction, btnLimpar);
 		
 	}
 	
@@ -171,6 +168,7 @@ public class UpdateClienteView extends JPanel{
     }
     
     private void clearFields(){
+    	txtNomeCliente.setText("");
     	txtNome.setText("");
     	txtSobrenome.setText("");
     	txtCpf.setText("");
@@ -182,88 +180,54 @@ public class UpdateClienteView extends JPanel{
     	txtUserpassword.setText("");
     }
     
-    private class SalvarDadosCliente implements ActionListener{
+    private void setDataToFields(Client cli){
+    	txtNome.setText(cli.getName());
+    	txtSobrenome.setText(cli.getLastName());
+    	txtCpf.setText(cli.getCpf());
+    	txtRg.setText(cli.getRg());
+    	txtCnpj.setText(cli.getCNPJ());
+    	txtEmail.setText(cli.getEmail());
+    	txtDataNascimento.setText(cli.getBirthDate().toString());
+    	txtUsername.setText(cli.getUserName());
+    	txtUserpassword.setText(cli.getPwd());
+    	
+    	switch(cli.getTipo().getId()){
+    		case 1: txtTipoCliente.setText("Especial"); break;
+    		case 2: txtTipoCliente.setText("Pessoa Física"); break;
+    		case 3: txtTipoCliente.setText("Pessoa Jurídica"); break;
+    	}
+    }
+    
+    private void getDataOfFields(){
+    	newCliente = new Client();
+    	newCliente.setName(txtNome.getText());
+    	newCliente.setLastName(txtSobrenome.getText());
+    	newCliente.setCpf(txtCpf.getText());
+    	newCliente.setRg(txtRg.getText());
+    	newCliente.setCNPJ(txtCnpj.getText());
+    	newCliente.setEmail(txtEmail.getText());
+    	newCliente.setBirthDate(Date.valueOf(txtDataNascimento.getText()));
+    	newCliente.setUserName(txtUsername.getText());
+    	newCliente.setPwd(txtUserpassword.getText());
+    	newCliente.setTipo(oldCliente.getTipo());
+    }
+    
+    private class ConsultaDadosCliente implements ActionListener{
 
 		public void actionPerformed(ActionEvent arg0) {
-			if(txtNome.getText().isEmpty()){
-				JOptionPane.showMessageDialog(null, 
-						"Digite o Nome do cliente!", 
-						"", 
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			else if(txtSobrenome.getText().isEmpty()){
-				JOptionPane.showMessageDialog(null, 
-						"Digite o sobrenome!", 
-						"", 
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			else if(txtCpf.getText().isEmpty()){
-				JOptionPane.showMessageDialog(null, 
-						"Digite o CPF!", 
-						"", 
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			else if(txtRg.getText().isEmpty()){
-				JOptionPane.showMessageDialog(null, 
-						"Digite o RG!", 
-						"", 
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			else if(txtEmail.getText().isEmpty()){
-				JOptionPane.showMessageDialog(null, 
-						"Digite o E-mail!", 
-						"", 
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			else if(txtDataNascimento.getText().isEmpty()){
-				JOptionPane.showMessageDialog(null, 
-						"Digite a data de nascimento!", 
-						"", 
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			else if(txtUsername.getText().isEmpty()){
-				JOptionPane.showMessageDialog(null, 
-						"Digite o login", 
-						"", 
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			else if(txtUserpassword.getText().isEmpty()){
-				JOptionPane.showMessageDialog(null, 
-						"Digite a senha!", 
-						"", 
+			if(txtNomeCliente.getText().isEmpty()){
+				JOptionPane.showMessageDialog(null,
+						"Digite o nome do cliente!",
+						"",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 			else{
-				Client client = new Client();
-				TipoCliente tipo = new TipoCliente();
-				//tipo.setId(listTipoCliente.getSelectedIndex() + 1);
-				client.setTipo(tipo);
-				client.setName(txtNome.getText());
-				client.setLastName(txtSobrenome.getText());
-				client.setCpf(txtCpf.getText());
-				client.setCNPJ(txtCnpj.getText());
-				client.setRg(txtRg.getText());
-				client.setEmail(txtEmail.getText());
-				client.setBirthDate(Date.valueOf(txtDataNascimento.getText()));
-				client.setUserName(txtUsername.getText());
-				client.setPwd(txtUserpassword.getText());
+				oldCliente = new Client();
+				oldCliente.setName(txtNomeCliente.getText());
 				
 				try {
-					client = customer.insertClient(client);
-					
-					if(client == null){
-						JOptionPane.showMessageDialog(null, 
-								"Não foi possivel cadastrar o cliente!", 
-								"ERRO",
-								JOptionPane.ERROR_MESSAGE);
-					}
-					else{
-						clearFields();
-						JOptionPane.showMessageDialog(null,
-								"Cliente inserido com sucesso!",
-								"Sucesso",
-								JOptionPane.INFORMATION_MESSAGE);
-					}
+					oldCliente = customer.findClientByName(oldCliente);
+					setDataToFields(oldCliente);
 					
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -279,6 +243,48 @@ public class UpdateClienteView extends JPanel{
 					e.printStackTrace();
 				}
 			}
+    	
 		}
+    }
+    
+	private class SalvarDadosCliente implements ActionListener{
+
+		public void actionPerformed(ActionEvent arg0) {
+			getDataOfFields();
+			
+			try {
+				customer.updateClient("Nome", newCliente.getName(), oldCliente.getName());
+				customer.updateClient("Sobrenome", newCliente.getLastName(), oldCliente.getLastName());
+				customer.updateClient("CPF", newCliente.getCpf(), oldCliente.getCpf());
+				customer.updateClient("RG", newCliente.getRg(), oldCliente.getRg());
+				customer.updateClient("CNPJ", newCliente.getCNPJ(), oldCliente.getCNPJ());
+				customer.updateClient("Email", newCliente.getEmail(), oldCliente.getEmail());
+				//customer.updateClient("DataNascimento", newCliente.getBirthDate(), oldCliente.getBirthDate());
+				customer.updateClient("UserName", newCliente.getUserName(), oldCliente.getUserName());
+				customer.updateClient("Userpasswd", newCliente.getPwd(), oldCliente.getPwd());
+				
+				clearFields();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+    }
+    
+    private class LimparCampos implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+			clearFields();
+		}
+    	
     }
 }

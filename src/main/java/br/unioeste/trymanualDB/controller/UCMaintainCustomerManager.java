@@ -30,4 +30,12 @@ public class UCMaintainCustomerManager {
 	public List<String> getAllTypeClients() throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception{
 		return entityManager.getClientFactory().retrieveAllTypeClient();
 	}
+	
+	public Client deleteClient(Client client) throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception{
+		return entityManager.getClientFactory().deleteClient(client);
+	}
+	
+	public void updateClient(String column,String newValue,String oldValue) throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception{
+		entityManager.getClientFactory().updateClient(column, newValue, oldValue);
+	}
 }

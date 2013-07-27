@@ -81,20 +81,23 @@ public class COLClientUsingSGBD implements FactoryDAOClient{
 
 		ResultSet rs = connection.executeSQL(sql);
 
-		while(rs.next())	{
-			client.setIdClient(rs.getInt(1));
-			client.setLastName(rs.getString(3));
-			client.setCpf(rs.getString(4));
-			client.setRg(rs.getString(5));
-			client.setCNPJ(rs.getString(6));
-			client.setEmail(rs.getString(7));
-			client.setBirthDate(rs.getDate(8));
-			client.setUserName(rs.getString(9));
-			client.setPwd(rs.getString(10));
-			TipoCliente tipo = new TipoCliente();
-			tipo.setId(rs.getInt(11));
-			client.setTipo(tipo);
+		if(rs != null){
+			while(rs.next())	{
+				client.setIdClient(rs.getInt(1));
+				client.setLastName(rs.getString(3));
+				client.setCpf(rs.getString(4));
+				client.setRg(rs.getString(5));
+				client.setCNPJ(rs.getString(6));
+				client.setEmail(rs.getString(7));
+				client.setBirthDate(rs.getDate(8));
+				client.setUserName(rs.getString(9));
+				client.setPwd(rs.getString(10));
+				TipoCliente tipo = new TipoCliente();
+				tipo.setId(rs.getInt(11));
+				client.setTipo(tipo);
+			}
 		}
+		else client = null;
 
 		connection.close();
 
@@ -184,22 +187,29 @@ public class COLClientUsingSGBD implements FactoryDAOClient{
 		connection = GlobalConnector.getConnection();
 		
 		StringBuffer build = new StringBuffer(); 
-		build.append("UPDATE Cliente SET " + column + "='" + newValue + "' WHERE " + column + "='" + oldValue + "';");
+		build.append("UPDATE cliente SET " + column + "='" + newValue + "' WHERE " + column + "='" + oldValue + "';");
 		
-		connection.execute(build);
+		connection.executeUpdate(build);
 		
 		connection.close();
 	}
 
-	public void deleteClient(Client client) throws Exception {
+	public Client deleteClient(Client client) throws Exception {
+		client = retrieveClientFromName(client);
+		
+		if(client == null) return null; //se o cliente não existe
+		
 		connection = GlobalConnector.getConnection();
 		
-		StringBuffer build = new StringBuffer();
-		build.append("DELETE FROM Cliente WHERE Nome ='");
-		build.append(client.getName() + "';");
+		System.out.println("ID do cliente: "+client.getIdClient());
 		
-		connection.execute(build);
+		StringBuffer build = new StringBuffer();
+		build.append("DELETE FROM cliente WHERE id = "+client.getIdClient());
+		
+		connection.executeUpdate(build);;
 		connection.close();
+		
+		return null;
 	}
 
 }

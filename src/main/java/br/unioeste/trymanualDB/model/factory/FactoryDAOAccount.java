@@ -22,6 +22,8 @@ public interface FactoryDAOAccount {
 	public  void updateAccount(String column,String newValue,String oldValue) throws Exception;
 	
 	//Delete account from database
-	public  void deleteAccount(BankAccount account) throws Exception;
+	public  BankAccount deleteAccount(BankAccount account) throws Exception;
+	
+	public List<String> retrieveAllTypeAccount() throws Exception;
 	
 }
