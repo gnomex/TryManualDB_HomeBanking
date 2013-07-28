@@ -17,7 +17,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import br.unioeste.base.BankAccount;
+import br.unioeste.base.Client;
+import br.unioeste.trymanualDB.common.ResourceView;
 import br.unioeste.trymanualDB.config.ContaTableModel;
+import br.unioeste.trymanualDB.controller.UCMaintainBankAccountManager;
+import br.unioeste.trymanualDB.controller.UCMaintainCustomerManager;
 
 public class ConsultarContaView extends JPanel {
 
@@ -62,14 +66,9 @@ public class ConsultarContaView extends JPanel {
     }
     
     private void initButton(){
-        btnProcurar = getButton("Procurar", KeyEvent.VK_P);
+        btnProcurar = ResourceView.getButton("Procurar", KeyEvent.VK_P);
+        btnProcurar.addActionListener(new ConsultarDadosConta());
         
-    }
-    
-    private JButton getButton(String label,int key){
-        JButton t = new JButton(label);
-        t.setMnemonic(key);
-        return t;
     }
     
     private void initTable(){
@@ -118,7 +117,31 @@ public class ConsultarContaView extends JPanel {
                         JOptionPane.INFORMATION_MESSAGE);
             }
             else{
-               
+            	Client client = new Client();
+            	client.setName(txtNomeCliente.getText());
+            	UCMaintainCustomerManager customer = new UCMaintainCustomerManager();
+            	
+            	try {
+					client = customer.findClientByName(client);
+					
+					if(client != null){
+						BankAccount account = new BankAccount();
+						account.setClient(client);
+						account = model.setAccount(account);
+					}
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InstantiationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
 		}
     	

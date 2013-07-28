@@ -32,4 +32,26 @@ public class UCMaintainBankAccountManager {
 	public List<String> getAllTypeAccounts() throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception{
 		return entityManager.getAccountFactory().retrieveAllTypeAccount();
 	}
+	
+	public void updateAccount(String column, String newValue, String oldValue){
+		try {
+			entityManager.getAccountFactory().updateAccount(column, newValue, oldValue);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public BankAccount deleteAccount(BankAccount account) throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception{
+		return entityManager.getAccountFactory().deleteAccount(account);
+	}
 }

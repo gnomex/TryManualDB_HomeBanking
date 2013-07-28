@@ -4,19 +4,26 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.sql.Date;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import br.unioeste.base.BankAccount;
+import br.unioeste.base.Client;
 import br.unioeste.base.TipoConta;
 import br.unioeste.trymanualDB.common.ResourceView;
 import br.unioeste.trymanualDB.controller.UCMaintainBankAccountManager;
+import br.unioeste.trymanualDB.controller.UCMaintainCustomerManager;
 
 public class CadastroContaView extends JPanel {
 
@@ -98,7 +105,9 @@ public class CadastroContaView extends JPanel {
 	
 	private void initButtons(){
 		btnSalvar = ResourceView.getButton("Salvar", KeyEvent.VK_S);
+		btnSalvar.addActionListener(new SalvarDadosConta());
 		btnLimpar = ResourceView.getButton("Limpar", KeyEvent.VK_L);
+		btnLimpar.addActionListener(new LimparCampos());
 	}
 	
 	private void initPanels(){
@@ -140,5 +149,93 @@ public class CadastroContaView extends JPanel {
         pnpAction.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         pnpAction.setPreferredSize(new Dimension(getWidth() - 150, 50));
         pnpAction.setLayout(new GridLayout(1, 2));
+    }
+    
+    private void clearFields(){
+    	txtNumero.setText("");
+    	txtAgencia.setText("");
+    	txtDataAdesao.setText("");
+    	txtDataEnce.setText("");
+    	txtValor.setText("");
+    	txtCliente.setText("");
+    }
+    
+    private class SalvarDadosConta implements ActionListener{
+
+		public void actionPerformed(ActionEvent arg0) {
+			if(txtNumero.getText().isEmpty()){}
+			else if(txtAgencia.getText().isEmpty()){}
+			else if(txtDataAdesao.getText().isEmpty()){}
+			else if(txtValor.getText().isEmpty()){}
+			else if(txtCliente.getText().isEmpty()){}
+			else{
+				BankAccount account = new BankAccount();
+				account.setAccountNumber(Integer.parseInt(txtNumero.getText()));
+				account.setBankBranch(txtAgencia.getText());
+				account.setStartAccountDate(Date.valueOf(txtDataAdesao.getText()));
+				account.setClosingAccountDate(Date.valueOf(txtDataEnce.getText()));
+				account.setSaldoCorrente(Float.parseFloat(txtValor.getText()));
+				Client client = new Client();
+				client.setName(txtCliente.getText());
+				
+				UCMaintainCustomerManager customer = new UCMaintainCustomerManager();
+				try {
+					client = customer.findClientByName(client);
+					if(client != null) {
+						account.setClient(client);
+						TipoConta tipo = new TipoConta();
+						
+						switch(listTipoConta.getSelectedIndex()){
+							case 0: tipo.setId(1); break;
+							case 1: tipo.setId(2); break;
+							case 2: tipo.setId(3); break;
+						}
+						
+						account.setTipo(tipo);
+						
+						UCMaintainBankAccountManager manager = new UCMaintainBankAccountManager();
+						account = manager.insertAccount(account);
+						clearFields();
+						
+						if(account != null){
+							JOptionPane.showMessageDialog(null,
+									"Conta inserida com sucesso!", 
+									"",
+									JOptionPane.INFORMATION_MESSAGE);
+						}
+						else{
+							JOptionPane.showMessageDialog(null,
+									"Erro ao inserir a conta", 
+									"Erro",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					}
+					
+					
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		}
+    	
+    }
+    
+    private class LimparCampos implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+			clearFields();
+		}
+    	
     }
 }

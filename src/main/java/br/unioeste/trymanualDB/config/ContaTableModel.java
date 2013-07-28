@@ -12,7 +12,7 @@ import br.unioeste.trymanualDB.controller.UCMaintainBankAccountManager;
 public class ContaTableModel extends AbstractTableModel{
 
 	private static final long serialVersionUID = 1L;
-	private Object[] columns = {"Numero", "Agência", "Data Adesão", "Data Encerramento", "Saldo", "Tipo"};
+	private Object[] columns = {"Numero", "Agência", "Data Adesão", "Data Encerramento", "Saldo", "Tipo", "Cliente"};
 	private List list;
 	
 	public ContaTableModel(){
@@ -36,6 +36,7 @@ public class ContaTableModel extends AbstractTableModel{
         	case 3: return account.getClosingAccountDate();
         	case 4: return account.getSaldoCorrente();
         	case 5: return account.getTipo().getId();
+        	case 6: return account.getClient().getName();
         }
         return null;
     }

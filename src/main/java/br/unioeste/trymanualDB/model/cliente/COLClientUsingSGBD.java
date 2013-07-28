@@ -197,11 +197,13 @@ public class COLClientUsingSGBD implements FactoryDAOClient{
 	public Client deleteClient(Client client) throws Exception {
 		client = retrieveClientFromName(client);
 		
-		if(client == null) return null; //se o cliente não existe
+		if(client == null){ //cliente não cadastrado
+			client = new Client();
+			client.setIdClient(-1);
+			return client;
+		}
 		
 		connection = GlobalConnector.getConnection();
-		
-		System.out.println("ID do cliente: "+client.getIdClient());
 		
 		StringBuffer build = new StringBuffer();
 		build.append("DELETE FROM cliente WHERE id = "+client.getIdClient());

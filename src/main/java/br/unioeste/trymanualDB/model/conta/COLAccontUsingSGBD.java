@@ -9,6 +9,7 @@ import br.unioeste.trymanualDB.common.DatabaseConnection;
 import br.unioeste.trymanualDB.common.GlobalConnector;
 import br.unioeste.base.BankAccount;
 import br.unioeste.base.Client;
+import br.unioeste.base.TipoConta;
 import br.unioeste.trymanualDB.model.factory.FactoryDAOAccount;
 
 public class COLAccontUsingSGBD implements FactoryDAOAccount{
@@ -20,17 +21,21 @@ public class COLAccontUsingSGBD implements FactoryDAOAccount{
 
 		connection = GlobalConnector.getConnection();
 
-		StringBuffer sql = new StringBuffer("INSERT INTO Conta(Agencia, DataAdesao, DataEncerramento, ValorCorrenteTotalEmConta, Cliente_id)");
+		StringBuffer sql = new StringBuffer("INSERT INTO conta (Numero, Agencia, DataAdesao, DataEncerramento, ValorCorrenteTotalEmConta, Cliente_id, TipoConta_id)");
 
-		sql.append(" VALUES('" + account.getBankBranch() + "','");
-
-		sql.append(dtForm.format(account.getStartAccountDate().toString()) + "','");
-
-		sql.append(dtForm.format(account.getClosingAccountDate().toString()) + "','");
+		sql.append(" VALUES(" + account.getAccountNumber() + ",'");
 		
-		sql.append(account.getSaldoCorrente() + "','");
+		sql.append(account.getBankBranch() + "','");
 
-		sql.append(account.getClient().getIdClient() + "');");
+		sql.append(dtForm.format(account.getStartAccountDate()) + "','");
+
+		sql.append(dtForm.format(account.getClosingAccountDate()) + "','");
+		
+		sql.append(account.getSaldoCorrente().toString() + "','");
+
+		sql.append(account.getClient().getIdClient() + "',");
+		
+		sql.append(account.getTipo().getId() + ");");
 
 		connection.execute(sql);
 
@@ -95,25 +100,19 @@ public class COLAccontUsingSGBD implements FactoryDAOAccount{
 		connection = GlobalConnector.getConnection();
 
 		// SELECT * FROM `Conta` WHERE 1
-		StringBuffer sql = new StringBuffer("SELECT * conta WHERE");
-
-		sql.append("Numero=" + account.getAccountNumber() + ";");
+		StringBuffer sql = new StringBuffer("SELECT * FROM conta WHERE Cliente_id = "+account.getClient().getIdClient());
 
 		ResultSet rs = connection.executeSQL(sql);
 
 		while(rs.next())	{
+			account.setAccountNumber(rs.getInt(1));
 			account.setBankBranch(rs.getString(2));
-
-			Client client = new Client();
-			client.setIdClient(rs.getInt(6));
-			account.setClient(client);
-
 			account.setStartAccountDate(rs.getDate(3));
-
 			account.setClosingAccountDate(rs.getDate(4));
-			
 			account.setSaldoCorrente(rs.getFloat(5));
-
+			TipoConta tipo = new TipoConta();
+			tipo.setId(rs.getInt(7));
+			account.setTipo(tipo);
 		}
 
 		connection.close();
@@ -204,13 +203,16 @@ public class COLAccontUsingSGBD implements FactoryDAOAccount{
 	public BankAccount deleteAccount(BankAccount account) throws Exception {
 		account = retrieveAccount(account);
 		
-		if(account == null) return null; //não encontrou a conta
+		if(account == null){ //se não existe a conta
+			account = new BankAccount();
+			account.setAccountNumber(-1);
+			return account;
+		}
 		
 		connection = GlobalConnector.getConnection();
 		
 		StringBuffer build = new StringBuffer();
-		build.append("DELETE FROM conta WHERE Cliente_id =");
-		build.append(account.getClient() + ";");
+		build.append("DELETE FROM conta WHERE Cliente_id = "+account.getClient().getIdClient());
 		
 		connection.executeUpdate(build);
 		connection.close();

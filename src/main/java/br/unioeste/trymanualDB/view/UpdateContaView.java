@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.sql.Date;
 
@@ -12,11 +14,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import br.unioeste.base.BankAccount;
+import br.unioeste.base.Client;
 import br.unioeste.trymanualDB.common.ResourceView;
+import br.unioeste.trymanualDB.controller.UCMaintainBankAccountManager;
+import br.unioeste.trymanualDB.controller.UCMaintainCustomerManager;
 
 public class UpdateContaView extends JPanel{
 
@@ -46,6 +50,8 @@ public class UpdateContaView extends JPanel{
 	private JButton btnSalvar, btnLimpar, btnProcurar;
 
 	private BankAccount oldAccount, newAccount;
+	
+	private UCMaintainBankAccountManager manager = new UCMaintainBankAccountManager();
 	
 	public UpdateContaView(Dimension d){
 		this.setSize(d);
@@ -79,11 +85,11 @@ public class UpdateContaView extends JPanel{
 	
 	private void initButtons(){
         btnSalvar = ResourceView.getButton("Salvar", KeyEvent.VK_S);
-        
+        btnSalvar.addActionListener(new SalvarDadosConta());
         btnLimpar = ResourceView.getButton("Limpar", KeyEvent.VK_L);
-        
+        btnLimpar.addActionListener(new LimparCampos());
         btnProcurar = ResourceView.getButton("Pesquisar", KeyEvent.VK_P);
-        
+        btnProcurar.addActionListener(new ConsultarDadosConta());
     }
 	
 	private void initPanels(){
@@ -162,11 +168,69 @@ public class UpdateContaView extends JPanel{
     	txtCliente.setText(account.getClient().getName());
     }
     
-    private void getDataOfFields(){
-    	newAccount.setAccountNumber(Integer.parseInt(txtNumero.getText()));
-    	newAccount.setBankBranch(txtAgencia.getText());
-    	newAccount.setStartAccountDate(Date.valueOf(txtDataAdesao.getText()));
-    	newAccount.setClosingAccountDate(Date.valueOf(txtDataEnce.getText()));
-    	newAccount.setSaldoCorrente(Float.parseFloat(txtValor.getText()));
+    private void getDataOfFields(BankAccount account){
+    	//account.setAccountNumber(Integer.parseInt(txtNumero.getText()));
+    	account.setBankBranch(txtAgencia.getText());
+    	//account.setStartAccountDate(Date.valueOf(txtDataAdesao.getText()));
+    	//account.setClosingAccountDate(Date.valueOf(txtDataEnce.getText()));
+    	account.setSaldoCorrente(Float.parseFloat(txtValor.getText()));
+    }
+    
+    private class ConsultarDadosConta implements ActionListener{
+
+		public void actionPerformed(ActionEvent arg0) {
+			if(txtNomeCliente.getText().isEmpty()){
+				
+			}
+			else{
+				oldAccount = new BankAccount();
+				Client client = new Client();
+				client.setName(txtNomeCliente.getText());
+				
+				UCMaintainCustomerManager customer = new UCMaintainCustomerManager();
+				
+				try {
+					client = customer.findClientByName(client);
+					if(client != null){
+						oldAccount.setClient(client);
+						oldAccount = manager.findAccount(oldAccount);
+						setDataToFields(oldAccount);
+					}
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+    	
+    }
+    
+    private class SalvarDadosConta implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+			newAccount = new BankAccount();
+			getDataOfFields(newAccount);
+			
+			manager.updateAccount("Agencia", newAccount.getBankBranch(), oldAccount.getBankBranch());
+			manager.updateAccount("ValorCorrenteTotalEmConta", newAccount.getSaldoCorrente().toString(), oldAccount.getSaldoCorrente().toString());
+		}
+    	
+    }
+    
+    private class LimparCampos implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+			clearFields();
+		}
+    	
     }
 }
